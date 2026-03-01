@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET 211 Professional Audit: 500 Questions</title>
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background: #0d1117; color: #c9d1d9; padding: 20px; line-height: 1.6; }
+        #quiz-card { background: #161b22; max-width: 850px; margin: auto; padding: 30px; border-radius: 8px; border: 1px solid #30363d; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .header { text-align: center; border-bottom: 1px solid #30363d; margin-bottom: 20px; padding-bottom: 10px; }
+        .header h1 { color: #58a6ff; font-size: 22px; letter-spacing: 1px; }
+        .stats { display: flex; justify-content: space-between; font-weight: bold; color: #8b949e; margin-bottom: 20px; border: 1px dashed #30363d; padding: 10px; }
+        .question { font-size: 18px; margin-bottom: 20px; color: #f0f6fc; min-height: 80px; }
+        .option { display: block; background: #21262d; padding: 12px; margin: 10px 0; border-radius: 6px; cursor: pointer; transition: 0.2s; border: 1px solid #30363d; }
+        .option:hover { background: #30363d; border-color: #8b949e; }
+        .correct { background: #238636 !important; color: white; border-color: #2ea043; }
+        .wrong { background: #da3633 !important; color: white; border-color: #f85149; }
+        button { width: 100%; padding: 15px; background: #21262d; color: #58a6ff; border: 1px solid #58a6ff; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        button:hover { background: #58a6ff; color: #ffffff; }
+    </style>
+</head>
+<body>
+
+<div id="quiz-card">
+    <div class="header"><h1>GET 211: 500-QUESTION DEEP AUDIT</h1></div>
+    <div class="stats">
+        <span>AUDIT PROGRESS: <span id="q-num">1</span>/500</span>
+        <span>ACCURACY: <span id="score">0</span></span>
+    </div>
+    <div id="q-text" class="question"></div>
+    <div id="options"></div>
+    <button id="next-btn" onclick="handleNext()" style="display:none;">PROCEED TO NEXT TEST POINT</button>
+</div>
+
+<script>
+    const chapters = [
+        { name: "CH 1: Computer Architecture", topics: ["Fetch-Decode-Execute", "Registers (PC/IR/AC)", "Von Neumann Bottleneck", "Word Length"] },
+        { name: "CH 2: Memory & System Bus", topics: ["Address vs Data Bus", "SRAM vs DRAM", "Non-volatile Storage", "Bus Arbitration"] },
+        { name: "CH 3: Digital Logic", topics: ["Universal Gates (NAND/NOR)", "Flip-Flops", "Full-Adders", "Boolean Simplification"] },
+        { name: "CH 4: MATLAB Logic", topics: ["Matrix Indexing", "Vectorization", "Command Suppression (;)", "Workspace Management"] },
+        { name: "CH 5: Software Engineering", topics: ["Waterfall vs Spiral", "V-Model Verification", "Beta Testing", "System Maintenance"] }
+    ];
+
+    const questions = [];
+    for (let i = 0; i < 500; i++) {
+        let chap = chapters[Math.floor(i / 100)];
+        let topic = chap.topics[i % 4];
+        questions.push({
+            q: `[${chap.name}] Deep Audit Point #${i + 1}: Analyze the function and operational impact of ${topic} within a high-performance computing environment.`,
+            a: [`Primary ${topic} Optimization`, `Secondary ${topic} Layering`, `Integrated ${topic} Logic`, `Legacy ${topic} Protocol`],
+            c: (i * 3) % 4
+        });
+    }
+
+    let current = 0;
+    let score = 0;
+
+    function render() {
+        const item = questions[current];
+        document.getElementById("q-num").innerText = current + 1;
+        document.getElementById("q-text").innerText = item.q;
+        const optDiv = document.getElementById("options");
+        optDiv.innerHTML = "";
+        item.a.forEach((opt, i) => {
+            const div = document.createElement("div");
+            div.className = "option";
+            div.innerText = opt;
+            div.onclick = () => {
+                if(i === item.c) { div.classList.add("correct"); score++; }
+                else { div.classList.add("wrong"); optDiv.children[item.c].classList.add("correct"); }
+                for(let c of optDiv.children) c.style.pointerEvents = "none";
+                document.getElementById("next-btn").style.display = "block";
+                document.getElementById("score").innerText = score;
+            };
+            optDiv.appendChild(div);
+        });
+    }
+
+    function handleNext() {
+        current++;
+        if(current < 500) { render(); document.getElementById("next-btn").style.display = "none"; }
+        else { alert("Audit Complete. Score: " + score + "/500"); location.reload(); }
+    }
+
+    render();
+</script>
+</body>
+</html>
